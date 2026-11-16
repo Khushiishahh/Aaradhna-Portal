@@ -56,10 +56,10 @@ const GUJARATI_TITHI_NAMES = {
 
 function addDays(isoDate, days) {
   if (!isoDate) return '';
-  const d = new Date(isoDate + 'T00:00:00');
-  if (isNaN(d.getTime())) return '';
-  d.setDate(d.getDate() + days);
-  return d.toISOString().split('T')[0];
+  const [y, m, d] = isoDate.split('-').map(Number);
+  if (!y || !m || !d) return '';
+  const dateObj = new Date(Date.UTC(y, m - 1, d + days));
+  return dateObj.toISOString().split('T')[0];
 }
 
 function formatDisplayDate(isoDate) {
