@@ -24,8 +24,9 @@ import { INITIAL_ENTRIES } from './initialEntries';
 // Your Live Published Google Sheet CSV URL
 // Instant Live Google Sheet CSV URL (No 5-minute Publish-to-Web cache delay)
 const GOOGLE_SHEET_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/15kuAgpcs4NNF9fE2WnUo3Odjx43BKu_5N2pSxbNpsmw/gviz/tq?tqx=out:csv&gid=755030390&headers=4';
-  const WEEKDAYS = [
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vT4bhay76arP535K9_71NPd0nZ9WbUNqEB0rrDDtmjuyOR7a-xHDo7qv49rr4JQxYvjIGlYXyyyCN54/pub?gid=755030390&single=true&output=csv';
+
+const WEEKDAYS = [
   { key: 0, short: 'SUN', guj: 'રવિ' },
   { key: 1, short: 'MON', guj: 'સોમ' },
   { key: 2, short: 'TUE', guj: 'મંગળ' },
