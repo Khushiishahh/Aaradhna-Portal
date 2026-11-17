@@ -151,15 +151,6 @@ export default function App() {
             String(row[15] || '').trim();
           const isoStart = normalizeToIsoDate(rawStart);
 
-      const parsedEntries = dataRows
-        .filter((row) => getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ') !== '')
-        .map((row, idx) => {
-          const rawStart =
-            getCol(row, 'ફાળવેલ શરૂઆત તારીખ') ||
-            getCol(row, 'Allotted') ||
-            getCol(row, 'ફાળવેલ તારીખ');
-          const isoStart = normalizeToIsoDate(rawStart);
-
           return {
             id: idx + 1,
             serialNo: getCol(row, 'અનુક્રમ નંબર') || String(idx + 1),
