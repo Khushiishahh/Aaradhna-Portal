@@ -24,8 +24,8 @@ import { INITIAL_ENTRIES } from './initialEntries';
 // Your Live Published Google Sheet CSV URL
 // Instant Live Google Sheet CSV URL (No 5-minute Publish-to-Web cache delay)
 const GOOGLE_SHEET_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/15kuAgpcs4NNF9fE2WnUo3Odjx43BKu_5N2pSxbNpsmw/gviz/tq?tqx=out:csv&gid=755030390';
-const WEEKDAYS = [
+  'https://docs.google.com/spreadsheets/d/15kuAgpcs4NNF9fE2WnUo3Odjx43BKu_5N2pSxbNpsmw/gviz/tq?tqx=out:csv&gid=755030390&headers=4';
+  const WEEKDAYS = [
   { key: 0, short: 'SUN', guj: 'રવિ' },
   { key: 1, short: 'MON', guj: 'સોમ' },
   { key: 2, short: 'TUE', guj: 'મંગળ' },
@@ -71,15 +71,24 @@ function formatDisplayDate(isoDate) {
 // Accepts YYYY-MM-DD, DD-MM-YYYY, or DD/MM/YYYY and returns YYYY-MM-DD
 function normalizeToIsoDate(raw) {
   if (!raw) return '';
-  const clean = String(raw).trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(clean)) return clean;
-  const dmy = clean.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
-  if (dmy) {
-    const day = dmy[1].padStart(2, '0');
-    const month = dmy[2].padStart(2, '0');
-    const year = dmy[3];
-    return `${year}-${month}-${day}`;
+  const cleaned = String(raw).replace(/['"]/g, '').trim();
+  if (!cleaned) return '';
+
+  const isoMatch = cleaned.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
+  if (isoMatch) {
+    return `${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}-${isoMatch[3].padStart(2, '0')}`;
   }
+
+  const slashMatch = cleaned.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  if (slashMatch) {
+    const first = Number(slashMatch[1]);
+    const second = Number(slashMatch[2]);
+    const year = slashMatch[3];
+    const month = first > 12 ? second : first;
+    const day = first > 12 ? first : second;
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
   return '';
 }
 
@@ -126,10 +135,21 @@ export default function App() {
       const headers = rowsArray[headerRowIndex].map((h) => String(h).trim());
       const dataRows = rowsArray.slice(headerRowIndex + 1);
 
-      const getCol = (row, colNameFragment) => {
+      const getCol = (row, colNameFragment, fallbackIndex = -1) => {
         const idx = headers.findIndex((h) => h.includes(colNameFragment));
-        return idx !== -1 ? String(row[idx] || '').trim() : '';
+        const val = idx !== -1 ? String(row[idx] || '').trim() : '';
+        if (val) return val;
+        return fallbackIndex !== -1 ? String(row[fallbackIndex] || '').trim() : '';
       };
+
+      const parsedEntries = dataRows
+        .filter((row) => getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ', 1) !== '')
+        .map((row, idx) => {
+          const rawStart =
+            getCol(row, 'ફાળવેલ શરૂઆત તારીખ', 15) ||
+            getCol(row, 'ફાળવેલ તારીખ', 15) ||
+            String(row[15] || '').trim();
+          const isoStart = normalizeToIsoDate(rawStart);
 
       const parsedEntries = dataRows
         .filter((row) => getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ') !== '')
