@@ -74,7 +74,6 @@ function normalizeToIsoDate(raw) {
   const cleaned = String(raw).replace(/['"]/g, '').trim();
   if (!cleaned) return '';
 
-  // 1. Handle Google gviz Date(YYYY,M,D) format (month is 0-indexed)
   const gvizMatch = cleaned.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})\)$/i);
   if (gvizMatch) {
     const y = gvizMatch[1];
@@ -83,19 +82,16 @@ function normalizeToIsoDate(raw) {
     return `${y}-${m}-${d}`;
   }
 
-  // 2. Handle YYYY-MM-DD or YYYY/MM/DD (e.g., 2027-01-27)
   const isoMatch = cleaned.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
   if (isoMatch) {
     return `${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}-${isoMatch[3].padStart(2, '0')}`;
   }
 
-  // 3. Handle DD/MM/YYYY or M/D/YYYY (Google Sheets Date cell export)
   const slashMatch = cleaned.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
   if (slashMatch) {
     const first = Number(slashMatch[1]);
     const second = Number(slashMatch[2]);
     const year = slashMatch[3];
-    // India/UK locale exports DD/MM/YYYY (e.g., 14/02/2027); US exports M/D/YYYY
     const month = first > 12 ? second : (second > 12 ? first : second);
     const day = first > 12 ? first : (second > 12 ? second : first);
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -158,27 +154,27 @@ export default function App() {
         .filter((row) => getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ', 1) !== '')
         .map((row, idx) => {
           const rawStart =
-            getCol(row, 'ફાળવેલ શરૂઆત તારીખ', 15) ||
-            getCol(row, 'ફાળવેલ તારીખ', 15) ||
-            String(row[15] || '').trim();
+            getCol(row, 'ફાળવેલ શરૂઆત તારીખ', 14) ||
+            getCol(row, 'ફાળવેલ તારીખ', 14) ||
+            String(row[14] || '').trim();
           const isoStart = normalizeToIsoDate(rawStart);
 
           return {
             id: idx + 1,
-            serialNo: getCol(row, 'અનુક્રમ નંબર') || String(idx + 1),
-            aaradhakName: getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ'),
-            guruBhagwantName: getCol(row, 'પૂ. ગુરુભગવંતશ્રીનું નામ'),
-            dikshaParyay: getCol(row, 'દિક્ષા પર્યાય'),
-            samuday: getCol(row, 'સમુદાય'),
-            convenientTithi: getCol(row, 'આપણને અનુકૂળ તિથી'),
-            dateCol: getCol(row, 'તારીખ'),
-            yearCol: getCol(row, 'સાલ'),
-            moreThanOneAshtam: getCol(row, 'એકથી વધારે અષ્ટમ'),
-            requestedDateText: getCol(row, 'આપના અનુકૂળ દિવસો'),
-            ourDaysText: getCol(row, 'અથવા અમારા દિવસો'),
-            mobileNumber: getCol(row, 'મોબાઈલ નંબર'),
-            address: getCol(row, 'સરનામું'),
-            entryDate: getCol(row, 'પ્રતિસાદ નોંધણી તારીખ'),
+            serialNo: getCol(row, 'અનુક્રમ નંબર', 0) || String(idx + 1),
+            aaradhakName: getCol(row, 'આરાધક પૂજ્યશ્રીનું નામ', 1),
+            guruBhagwantName: getCol(row, 'પૂ. ગુરુભગવંતશ્રીનું નામ', 2),
+            dikshaParyay: getCol(row, 'દિક્ષા પર્યાય', 3),
+            samuday: getCol(row, 'સમુદાય', 4),
+            convenientTithi: getCol(row, 'આપણને અનુકૂળ તિથી', 5),
+            dateCol: getCol(row, 'તારીખ', 6),
+            yearCol: getCol(row, 'સાલ', 7),
+            moreThanOneAshtam: getCol(row, 'એકથી વધારે અષ્ટમ', 8),
+            requestedDateText: getCol(row, 'આપના અનુકૂળ દિવસો', 9),
+            ourDaysText: getCol(row, 'અથવા અમારા દિવસો', 10),
+            mobileNumber: getCol(row, 'મોબાઈલ નંબર', 11),
+            address: getCol(row, 'સરનામું', 12),
+            entryDate: getCol(row, 'પ્રતિસાદ નોંધણી તારીખ', 13),
             remarks: getCol(row, 'સ્થિતિ'),
             allottedStartDate: isoStart,
             allottedDaysCount: 3
