@@ -781,9 +781,9 @@ export default function App() {
                     <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
                         <label className="text-xs font-medium text-stone-500">
-                           ફાળવેલ તારીખ (Google Sheet Col P):{' '}
+                           ફાળવેલ તારીખ (Google Sheet Col O):{' '}
                            <span className="font-bold text-emerald-700">
-                           {entry.allottedStartDate || 'બાકી (Not Allotted)'}
+                           {item.allottedStartDate || 'બાકી (Not Allotted)'}
                            </span>
                         </label>
                         <input
@@ -825,7 +825,7 @@ export default function App() {
                 ૩-દિવસ પહેલા WhatsApp નોટિફિકેશન શેડ્યૂલ (3-Day Advance Reminder Queue)
               </h2>
               <p className="text-xs text-amber-800 mt-1">
-                Google Sheet માં Column P (ફાળવેલ શરૂઆત તારીખ) ભરેલ હોય તેવા તમામ મહારાજ સાહેબની ૩-દિવસ પહેલાની એલર્ટ તારીખ અહીં આપમેળે દેખાશે.
+                Google Sheet માં Column O (ફાળવેલ શરૂઆત તારીખ) ભરેલ હોય તેવા તમામ મહારાજ સાહેબની ૩-દિવસ પહેલાની એલર્ટ તારીખ અહીં આપમેળે દેખાશે.
               </p>
             </div>
 
