@@ -633,7 +633,7 @@ export default function App() {
 
                 {(dateAllocationMap[selectedDateDetail] || []).length === 0 ? (
                   <p className="text-sm text-stone-500 py-4">
-                    આ તારીખે કોઈ આરાધક પૂજ્યશ્રીના ૩ દિવસ ફાળવેલ નથી. (તમારી Google Sheet માં Column P માં{' '}
+                    આ તારીખે કોઈ આરાધક પૂજ્યશ્રીના ૩ દિવસ ફાળવેલ નથી. (તમારી Google Sheet માં Column O માં{' '}
                     <code className="bg-stone-100 px-1.5 py-0.5 rounded font-mono text-xs">
                       {selectedDateDetail}
                     </code>{' '}
