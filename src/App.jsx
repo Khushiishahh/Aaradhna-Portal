@@ -772,8 +772,11 @@ export default function App() {
 
                     <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
-                        <label className="block text-[11px] font-semibold text-stone-500">
-                          ફાળવેલ તારીખ (Preview / Google Sheet Col P):
+                        <label className="text-xs font-medium text-stone-500">
+                           ફાળવેલ તારીખ (Google Sheet Col P):{' '}
+                           <span className="font-bold text-emerald-700">
+                           {entry.allottedStartDate || 'બાકી (Not Allotted)'}
+                           </span>
                         </label>
                         <input
                           type="date"
