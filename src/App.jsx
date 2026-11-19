@@ -148,7 +148,7 @@ export default function App() {
           const rawStart =
             getCol(row, 'ફાળવેલ શરૂઆત તારીખ', 15) ||
             getCol(row, 'ફાળવેલ તારીખ', 15) ||
-            String(row[15] || '').trim();
+            String(row[15] || row[row.length - 1] || '').trim();
           const isoStart = normalizeToIsoDate(rawStart);
 
           return {
