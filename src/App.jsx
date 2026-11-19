@@ -74,18 +74,30 @@ function normalizeToIsoDate(raw) {
   const cleaned = String(raw).replace(/['"]/g, '').trim();
   if (!cleaned) return '';
 
+  // 1. Handle Google gviz Date(YYYY,M,D) format (month is 0-indexed)
+  const gvizMatch = cleaned.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})\)$/i);
+  if (gvizMatch) {
+    const y = gvizMatch[1];
+    const m = String(Number(gvizMatch[2]) + 1).padStart(2, '0');
+    const d = String(Number(gvizMatch[3])).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  // 2. Handle YYYY-MM-DD or YYYY/MM/DD (e.g., 2027-01-27)
   const isoMatch = cleaned.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
   if (isoMatch) {
     return `${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}-${isoMatch[3].padStart(2, '0')}`;
   }
 
+  // 3. Handle DD/MM/YYYY or M/D/YYYY (Google Sheets Date cell export)
   const slashMatch = cleaned.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
   if (slashMatch) {
     const first = Number(slashMatch[1]);
     const second = Number(slashMatch[2]);
     const year = slashMatch[3];
-    const month = first > 12 ? second : first;
-    const day = first > 12 ? first : second;
+    // India/UK locale exports DD/MM/YYYY (e.g., 14/02/2027); US exports M/D/YYYY
+    const month = first > 12 ? second : (second > 12 ? first : second);
+    const day = first > 12 ? first : (second > 12 ? second : first);
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
 
@@ -148,7 +160,7 @@ export default function App() {
           const rawStart =
             getCol(row, 'ફાળવેલ શરૂઆત તારીખ', 15) ||
             getCol(row, 'ફાળવેલ તારીખ', 15) ||
-            String(row[15] || row[row.length - 1] || '').trim();
+            String(row[15] || '').trim();
           const isoStart = normalizeToIsoDate(rawStart);
 
           return {
